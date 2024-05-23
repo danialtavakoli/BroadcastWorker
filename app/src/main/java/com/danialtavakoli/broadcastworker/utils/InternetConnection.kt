@@ -1,4 +1,4 @@
-package com.danialtavakoli.broadcastworker
+package com.danialtavakoli.broadcastworker.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

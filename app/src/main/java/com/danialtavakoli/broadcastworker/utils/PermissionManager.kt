@@ -1,4 +1,4 @@
-package com.danialtavakoli.broadcastworker
+package com.danialtavakoli.broadcastworker.utils
 
 import android.Manifest
 import android.app.Activity

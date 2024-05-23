@@ -1,4 +1,4 @@
-package com.danialtavakoli.broadcastworker
+package com.danialtavakoli.broadcastworker.utils
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -14,25 +14,26 @@ import androidx.core.content.ContextCompat
 
 class NotificationManager {
 
-    private val channelId = "InternetStatusChannel"
-    private val notificationId = 101
+    companion object {
+        private const val CHANNEL_ID = "InternetStatusChannel"
+        const val NOTIFICATION_ID = 101
+    }
 
     fun showNotification(context: Context, message: String) {
-        // Check if permission is granted
         if (ContextCompat.checkSelfPermission(
                 context, Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             createNotificationChannel(context)
 
-            val builder = NotificationCompat.Builder(context, channelId)
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Internet Status")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
             with(NotificationManagerCompat.from(context)) {
-                notify(notificationId, builder.build())
+                notify(NOTIFICATION_ID, builder.build())
             }
         } else {
             Toast.makeText(
@@ -46,7 +47,7 @@ class NotificationManager {
             val name = "InternetStatusChannel"
             val descriptionText = "Channel for showing internet status"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelId, name, importance).apply {
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
                 enableLights(true)
                 lightColor = Color.RED

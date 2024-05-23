@@ -1,8 +1,10 @@
 package com.danialtavakoli.broadcastworker
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danialtavakoli.broadcastworker.ui.theme.BroadcastWorkerTheme
+import com.danialtavakoli.broadcastworker.utils.LogUtils
 
 class MainActivity : ComponentActivity() {
 
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerReceiver()
+        startService(Intent(this, InternetService::class.java))
         enableEdgeToEdge()
         setContent {
             BroadcastWorkerTheme {
@@ -56,11 +60,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // Read and print logs for testing
+        val logs = LogUtils.readLogs(this)
+        logs.forEach {
+            Log.d("ConnectionLog", it.toString())
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(internetReceiver)
+        stopService(Intent(this, InternetService::class.java))
     }
 }
 
