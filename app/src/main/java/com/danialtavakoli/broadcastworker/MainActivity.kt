@@ -23,10 +23,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danialtavakoli.broadcastworker.ui.theme.BroadcastWorkerTheme
 import com.danialtavakoli.broadcastworker.utils.LogUtils
+import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
 
@@ -60,6 +64,26 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        setupPeriodicWorker()
+
+
+        // Read and print logs for testing
+        val logs = LogUtils.readLogs(this)
+        logs.forEach {
+            Log.d("ConnectionLog", it.toString())
+        }
+    }
+
+    private fun setupPeriodicWorker() {
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<StatusCheckWorker>(15, TimeUnit.MINUTES)
+                .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "StatusCheckWorker",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            periodicWorkRequest
+        )
 
         // Read and print logs for testing
         val logs = LogUtils.readLogs(this)
